@@ -1,0 +1,30 @@
+{%  extends "layout.html" %}
+
+{% block content %}
+    <div class="entry-list">
+    {%  if learnings.count() > 0 %}
+        {% for learning in learnings %}
+        <article>
+            <h2><a href="{{ url_for('details', timestamp=learning.timestamp_of_entry) }}" > {{ learning.title }}</a></h2>
+            <time datetime="%B %d, %Y">{{ learning.timestamp_of_entry.strftime('%B %d, %Y') }}</time>
+            {% for tag in learning.tags|split_string %}
+            <a href="{{ url_for('tagged_entries',  tag=tag|slugify) }}" >{{ tag }}</a>
+            {% endfor %}
+        </article>
+        {% endfor %}
+    {% else %}
+        <article>
+        <h2>Journal is empty</h2>
+        </article>
+    {% endif %}
+    </div>
+    <div>
+    <!-- Log in/Log out -->
+                {% if current_user.is_authenticated %}
+                    <p><a href="{{ url_for('logout') }}"title="Log out">Log out</a></p>
+                {% else %}
+                    <p><a href="{{ url_for('login') }}" title="Login">Login</a></p>
+                    <p><a href="{{ url_for('register') }}" title="Sign up">Sign up</a></p>
+                {% endif %}
+    </div>
+{%  endblock %}

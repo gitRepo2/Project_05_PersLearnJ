@@ -1,0 +1,32 @@
+{%  extends "layout.html" %}
+
+{% block content %}
+    <div class="container">
+        <div class="entry-list single">
+            <article>
+                <h1>{{ learning.title }}</h1>
+                <time datetime="2016-01-31">{{ learning.date.strftime('%B %d, %Y') }}</time>
+                <div class="entry">
+                    <h3>Time Spent: </h3>
+                    <p>{{ learning.time_spent }} hours</p>
+                </div>
+                <div class="entry">
+                    <h3>What I Learned:</h3>
+                    <p>{{ learning.learnt }}</p>
+                </div>
+                <div class="entry">
+                    <h3>Resources to Remember:</h3>
+                    <p>{{ learning.resourcesToRemember }}</p>
+                </div>
+                <div class="entry">
+                    <h3>Tags:</h3>
+                    <p>{{ learning.tags }}</p>
+                </div>
+            </article>
+        </div>
+    </div>
+    <div class="edit">
+        <p><a href="{{ url_for('edit', timestamp=learning.timestamp_of_entry) }}">Edit Entry</a></p>
+        <p><a href="{{ url_for('delete', timestamp=learning.timestamp_of_entry) }}">Delete Entry</a></p>
+    </div>
+{% endblock %}

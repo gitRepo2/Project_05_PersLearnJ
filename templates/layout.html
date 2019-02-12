@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>MyJournal</title>
+        <link href="https://fonts.googleapis.com/css?family=Cousine:400" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:600" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="../static/css/normalize.css">
+        <link rel="stylesheet" href="../static/css/site.css">
+    </head>
+    <body>
+        {% with messages=get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+              {% for message in messages %}
+              <div class="message">
+                {{ message }}
+              </div>
+              {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <header>
+            <div class="container">
+                <div class="site-header">
+                    <a class="logo" href="{{ url_for('index') }}"><i class="material-icons">library_books</i></a>
+                {% if current_user.is_authenticated %}
+                    <a class="button icon-right" href="{{ url_for('new') }}"><span>New Entry</span> <i class="material-icons">add</i></a>
+                {% endif %}
+                </div>
+            </div>
+        </header>
+        <section>
+            <div class="container">
+                {%  block content %}{% endblock %}
+            </div>
+        </section>
+        <footer>
+            <div>
+                &copy; MyJournal
+            </div>
+        </footer>
+    </body>
+</html>

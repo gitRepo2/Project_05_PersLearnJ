@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% from 'macros.html' import render_field %}
+
+{% block content %}
+    <div class="edit-entry">
+        <h2>Edit Entry</h2>
+        <form method='POST' action=''>
+              {{ form.hidden_tag() }}
+              <div class="row">
+                <div class="six columns">
+                  {{ render_field(form.title) }}
+                </div>
+                <div class="six columns">
+                  {{ render_field(form.date) }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="six columns">
+                  {{ render_field(form.time_spent) }}
+                </div>
+                <div class="six columns">
+                  {{ render_field(form.learnt) }}
+                </div>
+                  <div class="six columns">
+                  {{ render_field(form.resourcesToRemember) }}
+                </div>
+                </div>
+                  <div class="six columns">
+                  {{ render_field(form.tags) }}
+                </div>
+              </div>
+              <div class="u-full-width">
+                <input type="submit" class="button" value="Update Entry">
+                  <a href="{{ url_for('details', timestamp=learning.timestamp_of_entry) }}" class="button button-secondary">Cancel</a>
+              </div>
+        </form>
+    </div>
+{% endblock %}
