@@ -58,13 +58,13 @@ class LearningEntryModelTestCase(unittest.TestCase):
                 title='learn the ABC',
                 learnt='nothing again',
                 date='2019-11-01',
-                time_spent='1',  # in minutes
+                time_spent='1',
                 resourcesToRemember='this that',
                 tags='elephant röseli'
             )
             entry = LearningEntry.select().get()
 
-            self.assertEqual(LearningEntry.select().count(),1)
+            self.assertEqual(LearningEntry.select().count(), 1)
             self.assertEqual(entry.user, user)
 
 
@@ -111,61 +111,62 @@ class UserViewsTestCase(ViewTestCase):
 
     def test_logged_out_menu(self):
         rv = self.app.get('/')
-        self.assertIn("sign up", rv.get_data(as_text=True).lower())
-        self.assertIn("log in", rv.get_data(as_text=True).lower())
+        self.assertIn("login", rv.get_data(as_text=True).lower())
 
     def test_logged_in_menu(self):
         with test_database(TEST_DB, (User,)):
             UserModelTestCase.create_users(1)
             self.app.post('/login', data=USER_DATA)
             rv = self.app.get('/')
-            self.assertIn("New Entry", rv.get_data(as_text=True).lower())
-            self.assertIn("Log out", rv.get_data(as_text=True).lower())
+            self.assertIn("new entry", rv.get_data(as_text=True).lower())
+            self.assertIn("log out", rv.get_data(as_text=True).lower())
 
 
 class LearningViewsTestCase(ViewTestCase):
     def test_empty_db(self):
         with test_database(TEST_DB, (LearningEntry, User)):
+            UserModelTestCase.create_users(1)
+            self.app.post('/login', data=USER_DATA)
             rv = self.app.get('/')
-            self.assertIn("Journal is empty",
+            self.assertIn("journal is empty",
                           rv.get_data(as_text=True).lower())
 
     def test_add_learning(self):
         learning_data = {
-            'Title': 'learn the ABC',
-            'Date': '2019-11-01',
-            'Time spent in hours': '1',
-            'What I learnt': 'its load user not login user',
-            'Resources to remember': 'this that',
-            'Add some tags': 'elephant röseli'
+            'title': 'learn the ABCD',
+            'date': '2019-11-01',
+            'time_spent': '1',
+            'learnt': 'its load user not login user',
+            'resourcesToRemember': 'this that',
+            'tags': 'elephant röseli'
         }
-        with test_database(TEST_DB, (User, learningApp)):
+        with test_database(TEST_DB, (User, LearningEntry)):
             UserModelTestCase.create_users(1)
             self.app.post('/login', data=USER_DATA)
 
             learning_data['user'] = User.select().get()
-            rv = self.app.post('/entries', data=learning_data)
+            rv = self.app.post('/new', data=learning_data)
             self.assertEqual(rv.status_code, 302)
             self.assertEqual(rv.location, 'http://localhost/')
-            self.assertEqual(learningApp.select().count(), 1)
+            self.assertEqual(LearningEntry.select().count(), 1)
 
     def test_learning_list(self):
         learning_data = {
-            'Title': 'learn the ABC',
-            'Date': '2019-11-01',
-            'Time spent in hours': '1',
-            'What I learnt': 'so far',
-            'Resources to remember': 'this that',
-            'Add some tags': 'elephant röseli'
+            'title': 'learn the ABC',
+            'date': '2019-11-01',
+            'time_spent': '1',
+            'learnt': 'so far',
+            'resourcesToRemember': 'this that',
+            'tags': 'elephant röseli'
         }
         with test_database(TEST_DB, (User, LearningEntry)):
             UserModelTestCase.create_users(1)
             learning_data['user'] = User.select().get()
             LearningEntry.create(**learning_data)
-
+            self.app.post('/login', data=USER_DATA)
             rv = self.app.get('/')
             self.assertNotIn('Journal is empty', rv.get_data(as_text=True))
-            self.assertIn(learning_data['Resources to remember'],
+            self.assertIn(learning_data['title'],
                           rv.get_data(as_text=True))
 
 

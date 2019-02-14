@@ -77,7 +77,8 @@ def login():
         else:
             if check_password_hash(user.password, form.password.data):
                 login_user(user, remember=False)
-                flash("You've been logged in with {}!".format(user.email), "success")
+                flash("You've been logged in with {}!".format(user.email),
+                      "success")
                 return redirect(url_for('index'))  # current_user is new.
             else:
                 flash("You've not been logged in!", "error")
@@ -97,32 +98,35 @@ def logout():
 @login_required
 def index():
     """Landing page where the user learing entries are shown if logged in"""
-    learnings = LearningEntry.select().where(models.LearningEntry.user==
-        g.user._get_current_object()).order_by(LearningEntry.date.desc())\
-        .limit(100)
+    learnings = LearningEntry.select().where(
+        models.LearningEntry.user == g.user._get_current_object()).order_by(
+        LearningEntry.date.desc()).limit(100)
     return render_template('index.html', learnings=learnings)
 
 
 @app.route('/details/<string:timestamp>')
+@login_required
 def details(timestamp):
     """Selects a entry to be displayed on the details page."""
     timestamp = dateutil.parser.parse(timestamp)
     learning = LearningEntry.select().\
-        where(LearningEntry.timestamp_of_entry ==timestamp)
+        where(LearningEntry.timestamp_of_entry == timestamp)
     return render_template('details.html', learning=learning[0])
 
 
 @app.route('/entries/<string:tag>')
 @login_required
 def tagged_entries(tag):
-    """Shows journal entries filtered by a tag."""
+    """Shows journal entries filtered by a tag and user."""
     learnings = LearningEntry.select().where(
-        LearningEntry.tags.contains(tag) and
-        models.LearningEntry.user==g.user._get_current_object())
+        (LearningEntry.tags.contains(tag)) &
+        (models.LearningEntry.user == g.user._get_current_object())
+    )
     return render_template('index.html', learnings=learnings)
 
 
 @app.route('/new', methods=('GET', 'POST'))
+@login_required
 def new():
     """Page to enter a new journal entry."""
     form = forms.LearningForm()
@@ -142,10 +146,12 @@ def new():
 
 
 @app.route('/edit/<string:timestamp>', methods=('GET', 'POST'))
+@login_required
 def edit(timestamp):
     """Method to edit a existing journal entry."""
     timestamp = dateutil.parser.parse(timestamp)
-    l_entry = LearningEntry.select().where(LearningEntry.timestamp_of_entry == timestamp)
+    l_entry = LearningEntry.select().where(
+        LearningEntry.timestamp_of_entry == timestamp)
     form = forms.LearningForm(obj=l_entry[0])
     if form.validate_on_submit():
         flash("Yay, you updated a learning!", "success")
@@ -163,10 +169,12 @@ def edit(timestamp):
 
 
 @app.route('/entries/delete/<string:timestamp>')
+@login_required
 def delete(timestamp):
     """Deletes a journal entry."""
     timestamp = dateutil.parser.parse(timestamp)
-    learning = LearningEntry.select().where(LearningEntry.timestamp_of_entry == timestamp)
+    learning = LearningEntry.select().where(
+        LearningEntry.timestamp_of_entry == timestamp)
     learning[0].delete_instance()
     return redirect(url_for('index'))
 
