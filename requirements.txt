@@ -26,7 +26,7 @@ idna==2.7
 iso8601==0.1.12
 isodate==0.6.0
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.0
 mock==2.0.0
 more-itertools==4.3.0
