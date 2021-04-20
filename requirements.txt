@@ -40,7 +40,7 @@ peewee==2.4.4
 pep8==1.7.1
 pluggy==0.7.1
 psutil==5.4.7
-py==1.7.0
+py==1.10.0
 pyasn1==0.4.4
 pycparser==2.19
 PyJWT==1.6.4
