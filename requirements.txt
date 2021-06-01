@@ -59,7 +59,7 @@ requests-toolbelt==0.8.0
 six==1.11.0
 smmap2==2.0.5
 Unidecode==1.0.23
-urllib3==1.23
+urllib3==1.26.5
 Werkzeug==0.14.1
 WTForms==2.2.1
 zipstream==1.1.4
