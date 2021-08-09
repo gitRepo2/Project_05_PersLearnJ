@@ -50,7 +50,7 @@ pytest-cov==2.6.0
 pytest-random-order==0.8.0
 python-dateutil==2.7.3
 pytz==2018.9
-pywin32==223
+pywin32==301
 PyXB==1.2.6
 rdflib==4.2.2
 regex==2019.1.24
